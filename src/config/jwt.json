@@ -1,0 +1,8 @@
+{
+  "jwt": {
+    "secretOrKey": "Ab/\baPap|pap0O9i!7",
+    "audience": "checkout.com",
+    "issuer": "checkout.com",
+    "expiresIn": "182d"
+  }
+}
