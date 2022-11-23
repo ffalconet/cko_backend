@@ -4,45 +4,53 @@ const constants = require('../../tools/constants');
 exports.payments = async (req, res) => {
 
 	let payment;
+	let source;
+	let genericPayload = {
+		customer: {
+			email: req.body.mail,
+			name: req.body.name,
+		},
+		currency: req.body.currency,
+		amount: req.body.amount,
+		reference: req.body.reference,
+	};
+
+	const add3dsecure = {
+		"3ds": {
+			enabled: true,
+		},
+		success_url: req.body.success_url,
+		failure_url: req.body.failure_url,
+	}
+
 	try {
 		console.log(req.body)
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
 
-		const payload = {
-			source: {
+		if (req.body.token) {
+			source = {
 				token: req.body.token,
-			},
-			customer: {
-				email: req.body.mail,
-				name: req.body.name,
-			},
-			currency: req.body.currency,
-			amount: req.body.amount,
-			reference: req.body.reference,
-		};
-
-		const securePayload = {
-			source: {
-				token: req.body.token,
-			},
-			customer: {
-				email: req.body.mail,
-				name: req.body.name,
-			},
-			currency: req.body.currency,
-			amount: req.body.amount,
-			reference: req.body.reference,
-			"3ds": {
-				enabled: true,
-			},
-			success_url: req.body.success_url,
-			failure_url: req.body.failure_url,
+			}
+		}
+		if (req.body.source) {
+			source = {
+				type: "id",
+				id: req.body.source,
+			}
 		}
 
-		if(req.body.securePayment)
-			payment = await cko.payments.request(securePayload);
-		else
-			payment = await cko.payments.request(payload);
+		genericPayload = { ...genericPayload, source};
+
+		
+
+		if(req.body.securePayment) {
+			genericPayload = { ...genericPayload, add3dsecure};
+			console.log(genericPayload);
+			payment = await cko.payments.request(genericPayload);
+		} else {
+			console.log(genericPayload);
+			payment = await cko.payments.request(genericPayload);
+		}
 
 		console.log(payment)
 		if(payment) res.status(200).send(payment);
@@ -90,5 +98,20 @@ exports.getPaymentDetails = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send(error);
+	}
+};
+
+exports.getCustomerDetails = async (req, res) => {
+	try {
+		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+
+		const customerDetails = await cko.customers.get(req.params.id);
+		res.status(200).send(customerDetails)
+
+	} catch (error) {
+		if (error.message == 'NotFoundError')  
+			return res.status(404).send(error);
+		else 
+			return res.status(500).send(error);
 	}
 };

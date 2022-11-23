@@ -14,3 +14,7 @@ exports.sofortRequest = aclMiddleware({
 exports.getPaymentDetails = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
+
+exports.getCustomerDetails = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});

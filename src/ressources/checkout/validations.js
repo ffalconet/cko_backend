@@ -3,7 +3,8 @@ const joiValidate = require('../../middlewares/joi-validate');
 
 exports.payments = joiValidate({
 	body: Joi.object().keys({
-		token: Joi.string().required(),
+		token: Joi.string(),
+		source: Joi.string(),
 		email: Joi.string().required(),
 		name: Joi.string().required(),
 		currency: Joi.string().required(),
