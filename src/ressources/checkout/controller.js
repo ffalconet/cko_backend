@@ -13,15 +13,9 @@ exports.payments = async (req, res) => {
 		currency: req.body.currency,
 		amount: req.body.amount,
 		reference: req.body.reference,
-	};
-
-	const add3dsecure = {
-		"3ds": {
-			enabled: true,
-		},
 		success_url: req.body.success_url,
 		failure_url: req.body.failure_url,
-	}
+	};
 
 	try {
 		console.log(req.body)
@@ -43,8 +37,8 @@ exports.payments = async (req, res) => {
 
 		
 
-		if(req.body.securePayment) {
-			genericPayload = { ...genericPayload, add3dsecure};
+		if(req.body.securePayment == 'true') {
+			genericPayload = { ...genericPayload, "3ds":{enabled:true}};
 			console.log(genericPayload);
 			payment = await cko.payments.request(genericPayload);
 		} else {
