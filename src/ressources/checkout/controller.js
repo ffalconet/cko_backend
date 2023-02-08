@@ -108,14 +108,10 @@ exports.getPaymentDetails = async (req, res) => {
 
 exports.getCustomerDetails = async (req, res) => {
 	try {
-		console.log(1);
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
-		console.log(2);
 
 		const customerDetails = await cko.customers.get(req.params.id);
-		console.log(3);
 		res.status(200).send(customerDetails)
-		console.log(4);
 
 	} catch (error) {
 		if (error.message == 'NotFoundError')  
