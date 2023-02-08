@@ -7,7 +7,7 @@ exports.payments = async (req, res) => {
 	let source;
 	let genericPayload = {
 		customer: {
-			email: req.body.mail,
+			email: req.body.email,
 			name: req.body.name,
 		},
 		currency: req.body.currency,
@@ -26,25 +26,36 @@ exports.payments = async (req, res) => {
 				token: req.body.token,
 			}
 		}
-		if (req.body.source) {
+		if (req.body.source && req.body.source != 'paypal') {
 			source = {
 				type: "id",
 				id: req.body.source,
+			}
+		}
+		if (req.body.source && req.body.source === 'paypal') {
+			source = {
+				type: "paypal",
 			}
 		}
 
 		genericPayload = { ...genericPayload, source};
 
 		
-
+		if (req.body.source === 'paypal') {
+			genericPayload = { ...genericPayload, "items":[
+			{	
+				"name": "laptop",
+				"unit_price": req.body.amount,
+				"quantity": 1}]
+			};
+		}
+		
 		if(req.body.securePayment == 'true') {
 			genericPayload = { ...genericPayload, "3ds":{enabled:true}};
-			console.log(genericPayload);
-			payment = await cko.payments.request(genericPayload);
-		} else {
-			console.log(genericPayload);
-			payment = await cko.payments.request(genericPayload);
 		}
+
+		console.log(genericPayload);
+		payment = await cko.payments.request(genericPayload);
 
 		console.log(payment)
 		if(payment) res.status(200).send(payment);
