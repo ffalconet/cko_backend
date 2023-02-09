@@ -33,6 +33,8 @@ app.engine('html', mustacheExpress());
 app.set('view engine', 'html');
 app.set('views', `${__dirname}/views`);
 
+app.get('/', (req, res) => res.send('Demo CKO Server Launched!!!'));
+
 // listen for incoming requests
 const server = app.listen(4000, () => {
 	console.log(`Server is listening on port 4000`);
