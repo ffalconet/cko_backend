@@ -108,10 +108,12 @@ exports.getPaymentDetails = async (req, res) => {
 };
 
 exports.getCustomerDetails = async (req, res) => {
+	console.log(`get Instruments for  ${req.params.id}`);
 	try {
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
 		
 		const customerDetails = await cko.customers.get(req.params.id);
+		console.log(customerDetails);
 		res.status(200).send(customerDetails)
 
 	} catch (error) {

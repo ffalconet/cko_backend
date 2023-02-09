@@ -6,9 +6,9 @@ const cors = require('cors');
 const boom = require('express-boom');
 const cookieParser = require('cookie-parser');
 
-const jwtStrategy = require('./src/middlewares/strategies/jwt');
+//const jwtStrategy = require('./src/middlewares/strategies/jwt');
 
-require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
+//require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
 // create express app
 const app = express();
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json({ limit: '50mb' }));
 
 // require('./src/config/passport.config')(passport);
-passport.use(jwtStrategy());
-app.use(passport.initialize());
+// passport.use(jwtStrategy());
+// app.use(passport.initialize());
 
 app.use(express.static(path.join(__dirname, 'views')));
 
