@@ -13,6 +13,8 @@ require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 // create express app
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
+app.options('*', cors());
+
 app.use(boom());
 app.use(cookieParser());
 

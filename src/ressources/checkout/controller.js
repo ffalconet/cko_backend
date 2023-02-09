@@ -98,6 +98,7 @@ exports.getPaymentDetails = async (req, res) => {
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
 
 		const paymentDetails = await cko.payments.get(req.params.id);
+		console.log(paymentDetails);
 		if(paymentDetails) res.status(200).send(paymentDetails);
 
 	} catch (error) {
@@ -109,7 +110,7 @@ exports.getPaymentDetails = async (req, res) => {
 exports.getCustomerDetails = async (req, res) => {
 	try {
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
-
+		
 		const customerDetails = await cko.customers.get(req.params.id);
 		res.status(200).send(customerDetails)
 
