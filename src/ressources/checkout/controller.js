@@ -37,6 +37,11 @@ exports.payments = async (req, res) => {
 				type: "paypal",
 			}
 		}
+		if (req.body.source && req.body.source === 'alma') {
+			source = {
+				type: "alma",
+			}
+		}
 
 		genericPayload = { ...genericPayload, source};
 
@@ -48,6 +53,10 @@ exports.payments = async (req, res) => {
 				"unit_price": req.body.amount,
 				"quantity": 1}]
 			};
+		}
+
+		if (req.body.source === 'alma') {
+			genericPayload = { ...genericPayload, "capture": true};
 		}
 		
 		if(req.body.securePayment == 'true') {
