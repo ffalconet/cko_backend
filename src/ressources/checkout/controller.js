@@ -1,5 +1,8 @@
 const { Checkout } = require('checkout-sdk-node');
 const constants = require('../../tools/constants');
+const fs = require("fs");
+const https = require("https");
+const axios = require("axios");
 
 exports.payments = async (req, res) => {
 
@@ -158,3 +161,85 @@ exports.getToken = async (req, res) => {
 			return res.status(500).send(error);
 	}
 };
+
+
+exports.validateAppleSession = async (req, res) => {
+
+	console.log('ici');
+	const { appleUrl } = req.body;
+	console.log(appleUrl);
+  
+	let httpsAgent;
+	const cert = "./certificates/certificate_sandbox.pem";
+	const key = "./certificates/certificate_sandbox.key";
+	
+  
+	httpsAgent = new https.Agent({
+	  rejectUnauthorized: false,
+	  cert: fs.readFileSync(cert),
+	  key: fs.readFileSync(key),
+	});
+  
+	try {
+	  response = await axios.post(
+		appleUrl,
+		{
+		  merchantIdentifier: 'merchant.sandbox.fr',
+		  domainName: 'voldoizoaix.com',
+		  displayName: "Test",
+		},
+		{
+		  httpsAgent,
+		}
+	  );
+	  res.send(response.data);
+	} catch (err) {
+	  console.log(err);
+	  res.sendStatus(500)(err);
+	}
+  };
+  
+  exports.payWithApple = async (req, res) => {
+	const { version, data, signature, header } =
+	  req.body.details.token.paymentData;
+
+	const cko = new Checkout(constants.CKO_SECRET_KEY , { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+	const { currency, price } = req.body;
+  
+	try {
+	  const token = await cko.tokens.request({
+		token_data: {
+		  version: version,
+		  data: data,
+		  signature: signature,
+		  header: {
+			ephemeralPublicKey: header.ephemeralPublicKey,
+			publicKeyHash: header.publicKeyHash,
+			transactionId: header.transactionId,
+		  },
+		},
+	  });
+  
+	  console.log("Apple Pay tokenization outcome", token);
+  
+	  const payment = await cko.payments.request({
+		source: {
+		  type: "token",
+		  token: token.token,
+		},
+		"3ds": {
+		  enabled: true,
+		  attempt_n3d: true,
+		},
+		amount: Math.floor(price * 100),
+		currency,
+		reference: "APPLE PAY",
+	  });
+  
+	  console.log("Apple Pay payment outcome", payment);
+	  res.send(payment);
+	} catch (err) {
+	  res.status(500).send(err);
+	}
+  };
+

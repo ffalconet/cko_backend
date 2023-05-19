@@ -22,3 +22,11 @@ exports.getCustomerDetails = aclMiddleware({
 exports.getToken = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
+
+exports.validateAppleSession = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});
+
+exports.payWithApple = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});

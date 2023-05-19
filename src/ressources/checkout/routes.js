@@ -36,6 +36,18 @@ const routes = [
 		path: '/tokens',
 		authorization: authorizations.getToken,
 		controller: controller.getToken,
+	},
+	{
+		method: 'POST',
+		path: '/validateAppleSession',
+		authorization: authorizations.validateAppleSession,
+		controller: controller.validateAppleSession,
+	},
+	{
+		method: 'POST',
+		path: '/payWithApple',
+		authorization: authorizations.payWithApple,
+		controller: controller.payWithApple,
 	}
 
 
