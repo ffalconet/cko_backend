@@ -132,3 +132,29 @@ exports.getCustomerDetails = async (req, res) => {
 			return res.status(500).send(error);
 	}
 };
+
+exports.getToken = async (req, res) => {
+	console.log(`get Token for  ${req.body.signature} and ${req.body.type} `);
+	try {
+		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+		
+		const tokenRequest = {
+			token_data: {
+				protocolVersion: req.body.protocolVersion,
+				signature: req.body.signature,
+				signedMessage: req.body.signedMessage,
+			  },
+			type: req.body.type,
+		};
+
+		const tokenReponse = await cko.tokens.request(tokenRequest);
+		res.status(200).send(tokenReponse);
+		
+
+	} catch (error) {
+		if (error.message == 'NotFoundError')  
+			return res.status(404).send(error);
+		else 
+			return res.status(500).send(error);
+	}
+};

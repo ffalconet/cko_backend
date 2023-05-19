@@ -18,3 +18,7 @@ exports.getPaymentDetails = aclMiddleware({
 exports.getCustomerDetails = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
+
+exports.getToken = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});

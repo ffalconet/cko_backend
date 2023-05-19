@@ -30,6 +30,12 @@ const routes = [
 		path: '/customers/:id',
 		authorization: authorizations.getCustomerDetails,
 		controller: controller.getCustomerDetails,
+	},
+	{
+		method: 'POST',
+		path: '/tokens',
+		authorization: authorizations.getToken,
+		controller: controller.getToken,
 	}
 
 
