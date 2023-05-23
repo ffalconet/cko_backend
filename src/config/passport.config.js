@@ -1,6 +1,5 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-const Vendor = require('../ressources/vendor/vendor.model');
 const keys = require('./database.config');
 
 const opts = {};

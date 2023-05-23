@@ -1,0 +1,21 @@
+{
+    "1": {
+        "name": "Checkout.com",
+        "logoImage": "#800080",
+        "productImage": "#FFA500",
+        "primaryColor": "#0C1142",
+        "secondaryColor": "#D5F6F8",
+        "thirdColor": "#2BD4DB",
+        "checkColor": "#4CAF50",
+        "brand": "Checkout.com",
+        "productName": "T-shirt en coton 'Disney'",
+        "productDesc": "M - Orange",
+        "productPrice": "10,00",
+        "discount": "40",
+        "buyerEmail": "demo1@checkout.com",
+        "googlePayActive": false,
+        "applePayActive": false,
+        "paypalActive": false,
+        "almaActive": false
+    }
+}
