@@ -1,6 +1,6 @@
 {
-    "1": {
-        "name": "Checkout.com",
+    "Checkout": {
+        "name": "Checkout",
         "logoImage": "#800080",
         "productImage": "#FFA500",
         "primaryColor": "#0C1142",
@@ -13,9 +13,9 @@
         "productPrice": "10,00",
         "discount": "40",
         "buyerEmail": "demo1@checkout.com",
-        "googlePayActive": false,
-        "applePayActive": false,
-        "paypalActive": false,
-        "almaActive": false
+        "googlePayActive": true,
+        "applePayActive": true,
+        "paypalActive": true,
+        "almaActive": true
     }
 }
