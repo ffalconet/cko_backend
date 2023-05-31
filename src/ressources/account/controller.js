@@ -1,6 +1,13 @@
 const fs = require("fs");
+const ImageKit = require("imagekit");
+const constants = require('../../tools/constants');
 const dataPath = './src/config/merchantConfig.json';  // path to our JSON file
 
+const imageKit = new ImageKit({
+    publicKey: constants.IMAGEKIT_PUBLIC_KEY,
+    privateKey: constants.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: constants.IMAGEKIT_URL_ENDPOINT,
+})
 
 // util functions
 const saveAccountData = (data) => {
@@ -63,4 +70,11 @@ exports.delete = async (req, res) => {
 		res.send(`accounts with id ${userId} has been deleted`)
 	  }, true);
 	
+};
+
+exports.authenticateIK = async (req, res) => {
+
+	var authenticationParameters = imageKit.getAuthenticationParameters();
+	console.log(authenticationParameters);
+	res.send(authenticationParameters)
 };

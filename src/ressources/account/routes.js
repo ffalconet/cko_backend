@@ -36,7 +36,13 @@ const routes = [
 		path: '/:id',
 		authorization: authorizations.delete,
 		controller: controller.delete,
-	}
+	},
+	{
+		method: 'GET',
+		path: '/AuthenticateIK',
+		authorization: authorizations.authenticateIK,
+		controller: controller.authenticateIK,
+	},
 ];
 routesHelper.mountApiRoutes(router, routes.reverse());
 

@@ -22,3 +22,7 @@ exports.update = aclMiddleware({
 exports.delete = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
+
+exports.authenticateIK = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});
