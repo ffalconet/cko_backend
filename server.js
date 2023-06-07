@@ -5,10 +5,24 @@ const mustacheExpress = require('mustache-express');
 const cors = require('cors');
 const boom = require('express-boom');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 
-//const jwtStrategy = require('./src/middlewares/strategies/jwt');
+mongoose.Promise = global.Promise;
 
-//require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
+const dbUrl = `mongodb+srv://ffalconet:cf2iLAzJHaaIapBf@democko.fn1dnhu.mongodb.net/demo-cko?retryWrites=true&w=majority`;
+
+
+mongoose.connect(dbUrl, {
+	//useFindAndModify: false,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', () => { console.error('DB connection error'); });
+db.once('open', () => {
+	console.info('new DB connection successful');
+});
 
 // create express app
 const app = express();

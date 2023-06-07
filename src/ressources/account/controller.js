@@ -2,6 +2,7 @@ const fs = require("fs");
 const ImageKit = require("imagekit");
 const constants = require('../../tools/constants');
 const dataPath = './src/config/merchantConfig.json';  // path to our JSON file
+const MerchantConfig = require('./model');
 
 const imageKit = new ImageKit({
     publicKey: constants.IMAGEKIT_PUBLIC_KEY,
@@ -9,68 +10,106 @@ const imageKit = new ImageKit({
     urlEndpoint: constants.IMAGEKIT_URL_ENDPOINT,
 })
 
-// util functions
-const saveAccountData = (data) => {
-    const stringifyData = JSON.stringify(data)
-    fs.writeFileSync(dataPath, stringifyData)
-}
-const getAccountData = () => {
-    const jsonData = fs.readFileSync(dataPath)
-    return JSON.parse(jsonData)   
-}
-
 exports.create = async (req, res) => {
 
-	var existAccounts = getAccountData()
-    const newAccountId = Math.floor(100000 + Math.random() * 900000)
- 
-    existAccounts[newAccountId] = req.body
-   
-    console.log(existAccounts);
-    saveAccountData(existAccounts);
-    res.send({success: true, msg: 'account added successfully'})
-	
+	const inputMerchantConfig = req.body;
+
+	try {
+		const merchantConfig = new MerchantConfig({
+			name: inputMerchantConfig.name,
+			logoImage: inputMerchantConfig.logoImage,
+			productImage: inputMerchantConfig.productImage,
+			primaryColor: inputMerchantConfig.primaryColor,
+			secondaryColor: inputMerchantConfig.secondaryColor,
+			thirdColor: inputMerchantConfig.thirdColor,
+			checkColor: inputMerchantConfig.checkColor,
+			brand: inputMerchantConfig.brand,
+			productName: inputMerchantConfig.productName,
+			productDesc: inputMerchantConfig.productDesc,
+			productPrice: inputMerchantConfig.productPrice,
+			discount: inputMerchantConfig.discount,
+			buyerEmail: inputMerchantConfig.buyerEmail,
+			googlePayActive: inputMerchantConfig.googlePayActive,
+			applePayActive: inputMerchantConfig.applePayActive,
+			paypalActive: inputMerchantConfig.paypalActive,
+			almaActive: inputMerchantConfig.almaActive
+		});
+		
+		const newMerchantConfig = await merchantConfig.save();
+		console.log('new merchantConfig is saved : ' + newMerchantConfig.name);
+		return res.send(newMerchantConfig);
+	} catch (error) {
+		return res.boom.badImplementation('unable to create new merchant config');
+	}
 };
 
 exports.list = async (req, res) => {
-	const accounts = getAccountData()
-	res.send(accounts);
+	try {
+		const accounts = await MerchantConfig.find();
+		console.log('all merchant configs found');
+		return res.send(accounts);
+	} catch (error) {
+		return res.boom.badImplementation('unable to find products');
+	}
 };
 
 exports.get = async (req, res) => {
-	
-	var existAccounts = getAccountData()
-	fs.readFile(dataPath, 'utf8', (err, data) => {
-	  const accountId = req.params['id'];
-	  const accountData = existAccounts[accountId];
-	  console.log(accountData)
-	  res.send(accountData)
-	}, true);
-	
+
+	const accountId = req.params.id;
+
+	try {
+		const accountData = await MerchantConfig.findOne({name: accountId});
+		if (!accountData) return res.boom.notFound();
+		
+		console.log('merchantConfig ' + accountId + ' found');
+		return res.send(accountData);
+	} catch (error) {
+		return res.boom.badImplementation();
+	}
 };
 
 exports.update = async (req, res) => {
-
-	var existAccounts = getAccountData()
-	fs.readFile(dataPath, 'utf8', (err, data) => {
-	  const accountId = req.params['id'];
-	  existAccounts[accountId] = req.body;
-	  saveAccountData(existAccounts);
-	  res.send(`accounts with id ${accountId} has been updated`)
-	}, true);
-};
-
-exports.delete = async (req, res) => {
-
-	fs.readFile(dataPath, 'utf8', (err, data) => {
-		var existAccounts = getAccountData()
-		const userId = req.params['id'];
-		delete existAccounts[userId]; 
-		saveAccountData(existAccounts);
-		res.send(`accounts with id ${userId} has been deleted`)
-	  }, true);
 	
+	const accountId = req.params['id'];
+	const inputMerchantConfig = req.body;
+
+	let merchantConfig;
+	try {
+		merchantConfig = await MerchantConfig.findOne({name: accountId});
+		if (!merchantConfig) return res.boom.notFound('Merchant config not found');
+	} catch (error) {
+		return res.boom.badImplementation();
+	}
+
+	try {
+		merchantConfig.name = inputMerchantConfig.name,
+		merchantConfig.logoImage = inputMerchantConfig.logoImage,
+		merchantConfig.productImage = inputMerchantConfig.productImage,
+		merchantConfig.primaryColor = inputMerchantConfig.primaryColor,
+		merchantConfig.secondaryColor = inputMerchantConfig.secondaryColor,
+		merchantConfig.thirdColor = inputMerchantConfig.thirdColor,
+		merchantConfig.checkColor = inputMerchantConfig.checkColor,
+		merchantConfig.brand = inputMerchantConfig.brand,
+		merchantConfig.productName = inputMerchantConfig.productName,
+		merchantConfig.productDesc = inputMerchantConfig.productDesc,
+		merchantConfig.productPrice = inputMerchantConfig.productPrice,
+		merchantConfig.discount = inputMerchantConfig.discount,
+		merchantConfig.buyerEmail = inputMerchantConfig.buyerEmail,
+		merchantConfig.googlePayActive = inputMerchantConfig.googlePayActive,
+		merchantConfig.applePayActive = inputMerchantConfig.applePayActive,
+		merchantConfig.paypalActive = inputMerchantConfig.paypalActive,
+		merchantConfig.almaActive = inputMerchantConfig.almaActive
+
+		await merchantConfig.save();
+		console.log('merchant config : ' + merchantConfig.name + ', properly updated');
+		return res.send(merchantConfig);
+	} catch (error) {
+		console.log(error);
+		return res.boom.badImplementation('cannot update merchant config');
+	}
+
 };
+
 
 exports.authenticateIK = async (req, res) => {
 

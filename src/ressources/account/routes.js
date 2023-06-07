@@ -32,12 +32,6 @@ const routes = [
 		controller: controller.update,
 	},
 	{
-		method: 'DELETE',
-		path: '/:id',
-		authorization: authorizations.delete,
-		controller: controller.delete,
-	},
-	{
 		method: 'GET',
 		path: '/AuthenticateIK',
 		authorization: authorizations.authenticateIK,
