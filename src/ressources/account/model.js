@@ -5,6 +5,7 @@ const merchantConfigSchema = mongoose.Schema({
     name: String,
     logoImage: String,
     productImage: String,
+    bgImage: String,
     primaryColor: String,
     secondaryColor: String,
     thirdColor: String,
