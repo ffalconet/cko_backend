@@ -13,5 +13,6 @@ exports.payments = joiValidate({
 		securePayment: Joi.boolean(),
 		success_url: Joi.string(),
 		failure_url: Joi.string(),
+		store_for_future_use: Joi.boolean()
 	}),
 });

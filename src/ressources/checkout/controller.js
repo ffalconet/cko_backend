@@ -8,6 +8,7 @@ exports.payments = async (req, res) => {
 
 	let payment;
 	let source;
+	let store_for_future_use;
 	let genericPayload = {
 		customer: {
 			email: req.body.email,
@@ -24,9 +25,15 @@ exports.payments = async (req, res) => {
 		console.log(req.body)
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
 
+		if (req.body.store_for_future_use && req.body.store_for_future_use == 'true')
+			store_for_future_use = true;
+		else
+			store_for_future_use = false;
+
 		if (req.body.token) {
 			source = {
 				token: req.body.token,
+				store_for_future_use: store_for_future_use
 			}
 		}
 		if (req.body.source && req.body.source != 'paypal') {
