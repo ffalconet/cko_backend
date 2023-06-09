@@ -3,6 +3,7 @@ const constants = require('../../tools/constants');
 const fs = require("fs");
 const https = require("https");
 const axios = require("axios");
+const Instrument = require('./model');
 
 exports.payments = async (req, res) => {
 
@@ -118,7 +119,28 @@ exports.getPaymentDetails = async (req, res) => {
 
 		const paymentDetails = await cko.payments.get(req.params.id);
 		console.log(paymentDetails);
-		if(paymentDetails) res.status(200).send(paymentDetails);
+		if(paymentDetails) {
+			if (paymentDetails.source && paymentDetails.source.id) {
+
+				const result = await Instrument.find({sourceId: paymentDetails.source.id});
+				console.log(result)
+				if (result && result.length == 0) {
+					const instrument = new Instrument({
+						buyerEmail: paymentDetails.customer.email,
+						scheme: paymentDetails.source.scheme,
+						sourceId: paymentDetails.source.id,
+						bin: paymentDetails.source.bin,
+						last4: paymentDetails.source.last4,
+						expiryMonth: paymentDetails.source.expiry_month,
+						expiryYear: paymentDetails.source.expiry_year,
+					});
+					
+					await instrument.save();
+					console.log('new instrument is saved : ' + instrument.bin + 'xxxxxxx' + instrument.last4 + ', ' + instrument.expiryMonth + '|' + instrument.expiryYear);
+				}
+			}
+			res.status(200).send(paymentDetails);
+		}
 
 	} catch (error) {
 		console.log(error);
@@ -126,7 +148,7 @@ exports.getPaymentDetails = async (req, res) => {
 	}
 };
 
-exports.getCustomerDetails = async (req, res) => {
+/*exports.getCustomerDetails = async (req, res) => {
 	console.log(`get Instruments for  ${req.params.id}`);
 	try {
 		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
@@ -140,6 +162,24 @@ exports.getCustomerDetails = async (req, res) => {
 			return res.status(404).send(error);
 		else 
 			return res.status(500).send(error);
+	}
+};*/
+
+
+exports.getCustomerDetails = async (req, res) => {
+
+	console.log(`get Instruments for  ${req.params.id}`);
+
+	const buyerEmail = req.params.id;
+
+	try {
+		const instruments = await Instrument.find({buyerEmail: buyerEmail});
+		if (!instruments) return res.boom.notFound();
+		
+		console.log('instruments for   ' + buyerEmail + ' found');
+		return res.send(instruments);
+	} catch (error) {
+		return res.boom.badImplementation();
 	}
 };
 
