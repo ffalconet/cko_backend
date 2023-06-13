@@ -231,7 +231,7 @@ exports.validateAppleSession = async (req, res) => {
 	  response = await axios.post(
 		appleUrl,
 		{
-		  merchantIdentifier: 'com.herokuapp.demo-cko',
+		  merchantIdentifier: 'merchant.com.herokuapp.demo-cko',
 		  domainName: 'demo-cko-frontend.herokuapp.com',
 		  displayName: "Test",
 		},
