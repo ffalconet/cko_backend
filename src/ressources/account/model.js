@@ -19,7 +19,8 @@ const merchantConfigSchema = mongoose.Schema({
     googlePayActive: { type: Boolean, default: true },
     applePayActive: { type: Boolean, default: true },
     paypalActive: { type: Boolean, default: true },
-    almaActive: { type: Boolean, default: true }
+    almaActive: { type: Boolean, default: true },
+    sepaActive: { type: Boolean, default: true }
 }, {
 	timestamps: true,
 });

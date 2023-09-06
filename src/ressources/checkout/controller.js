@@ -1,5 +1,7 @@
 const { Checkout } = require('checkout-sdk-node');
 const constants = require('../../tools/constants');
+const gclConstants = require('gocardless-nodejs/constants');
+const gocardless = require('gocardless-nodejs');
 const fs = require("fs");
 const https = require("https");
 const axios = require("axios");
@@ -290,3 +292,43 @@ exports.validateAppleSession = async (req, res) => {
 	}
   };
 
+
+  exports.sepaMandate = async (req, res) => {
+
+	console.log(req.body)
+	const client = gocardless('sandbox_SIgk06iRu15rVR22U4BINTp8eqx8qpEBettXXxUJ', gclConstants.Environments.Sandbox);
+	const { currency, amount, success_url, failure_url } = req.body;
+
+	try {
+		const billingRequest = await client.billingRequests.create(
+		/*	{
+				payment_request: {
+				description: "First Payment",
+				amount,
+				currency: currency,
+				app_fee: amount,
+				},
+			} */
+			{
+				mandate_request: {
+				scheme: "sepa_core"
+			}}
+		);
+  
+		if (billingRequest && billingRequest.id)
+	  		console.log(`billingRequests done:  ${billingRequest.id} - status: ${billingRequest.status}`);
+  
+		const billingRequestFlow = await client.billingRequestFlows.create({
+		redirect_uri: success_url,
+		exit_uri: failure_url,
+		links: {
+			billing_request: billingRequest.id,
+		}
+		});
+  
+	  console.log("Billing Request flew", billingRequestFlow);
+	  res.send(billingRequestFlow);
+	} catch (err) {
+	  res.status(500).send(err);
+	}
+  };

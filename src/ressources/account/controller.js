@@ -33,7 +33,8 @@ exports.create = async (req, res) => {
 			googlePayActive: inputMerchantConfig.googlePayActive,
 			applePayActive: inputMerchantConfig.applePayActive,
 			paypalActive: inputMerchantConfig.paypalActive,
-			almaActive: inputMerchantConfig.almaActive
+			almaActive: inputMerchantConfig.almaActive,
+			sepaActive: inputMerchantConfig.sepaActive
 		});
 		
 		const newMerchantConfig = await merchantConfig.save();

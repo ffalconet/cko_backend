@@ -30,3 +30,7 @@ exports.validateAppleSession = aclMiddleware({
 exports.payWithApple = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
+
+exports.sepaMandate = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});

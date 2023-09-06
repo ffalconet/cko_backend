@@ -48,6 +48,12 @@ const routes = [
 		path: '/payWithApple',
 		authorization: authorizations.payWithApple,
 		controller: controller.payWithApple,
+	},
+	{
+		method: 'POST',
+		path: '/sepaMandate',
+		authorization: authorizations.sepaMandate,
+		controller: controller.sepaMandate,
 	}
 
 
