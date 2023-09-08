@@ -8,6 +8,5 @@ module.exports = {
 	//CKO_PUBLIC_KEY: 'pk_sbox_7r34xejrkepaa7muecjdejxlda4',
 	IMAGEKIT_PUBLIC_KEY: 'public_M4O+PrfIqziXq+4C8rJrCKa9CRg=',
 	IMAGEKIT_PRIVATE_KEY: 'private_RQHnlF6r6EKh2RJzFLQeKRKHvB4=',
-	IMAGEKIT_URL_ENDPOINT: 'https://ik.imagekit.io/checkout',
-	GOCARDLESS_SANDBOX: 'sandbox_SIgk06iRu15rVR22U4BINTp8eqx8qpEBettXXxUJ'
+	IMAGEKIT_URL_ENDPOINT: 'https://ik.imagekit.io/checkout'
 };
