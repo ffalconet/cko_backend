@@ -17,6 +17,8 @@ exports.create = async (req, res) => {
 	try {
 		const merchantConfig = new MerchantConfig({
 			name: inputMerchantConfig.name,
+			publicKey: inputMerchantConfig.publicKey,
+			secretKey: inputMerchantConfig.secretKey,
 			logoImage: inputMerchantConfig.logoImage,
 			productImage: inputMerchantConfig.productImage,
 			bgImage: inputMerchantConfig.bgImage,
@@ -85,6 +87,8 @@ exports.update = async (req, res) => {
 
 	try {
 		merchantConfig.name = inputMerchantConfig.name,
+		merchantConfig.publicKey = inputMerchantConfig.publicKey,
+		merchantConfig.secretKey = inputMerchantConfig.secretKey,
 		merchantConfig.logoImage = inputMerchantConfig.logoImage,
 		merchantConfig.productImage = inputMerchantConfig.productImage,
 		merchantConfig.bgImage = inputMerchantConfig.bgImage,

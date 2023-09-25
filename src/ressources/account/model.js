@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const merchantConfigSchema = mongoose.Schema({
     name: String,
+    publicKey: String,
+    secretKey: String,
     logoImage: String,
     productImage: String,
     bgImage: String,
