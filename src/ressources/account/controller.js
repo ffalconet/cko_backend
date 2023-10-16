@@ -150,3 +150,14 @@ exports.authenticateIK = async (req, res) => {
 	console.log(authenticationParameters);
 	res.send(authenticationParameters)
 };
+
+
+exports.getDefaultConfig = async (req, res) => {
+	try {
+		const account = await MerchantConfig.findOne({'default':true});
+		console.log('Default merchant config found');
+		return res.send(account);
+	} catch (error) {
+		return res.boom.badImplementation('unable to find default Config');
+	}
+};

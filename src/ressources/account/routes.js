@@ -37,6 +37,12 @@ const routes = [
 		authorization: authorizations.authenticateIK,
 		controller: controller.authenticateIK,
 	},
+	{
+		method: 'GET',
+		path: '/default',
+		authorization: authorizations.get,
+		controller: controller.getDefaultConfig,
+	},
 ];
 routesHelper.mountApiRoutes(router, routes.reverse());
 
