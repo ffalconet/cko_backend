@@ -10,9 +10,27 @@ const imageKit = new ImageKit({
     urlEndpoint: constants.IMAGEKIT_URL_ENDPOINT,
 })
 
+
+async function updateAllDefaultConfig () {
+
+	let result;
+	try {
+		result  = await MerchantConfig.updateMany({default : true}, { default: false}, { multi: true });
+		return result;
+	} catch (e) {
+		console.log(e);
+	}
+}
+
 exports.create = async (req, res) => {
 
 	const inputMerchantConfig = req.body;
+
+	console.log(inputMerchantConfig.defaultConfig)
+
+	if (inputMerchantConfig.defaultConfig == 'true') {
+		await updateAllDefaultConfig();
+	}
 
 	try {
 		const merchantConfig = new MerchantConfig({
@@ -36,7 +54,8 @@ exports.create = async (req, res) => {
 			applePayActive: inputMerchantConfig.applePayActive,
 			paypalActive: inputMerchantConfig.paypalActive,
 			almaActive: inputMerchantConfig.almaActive,
-			sepaActive: inputMerchantConfig.sepaActive
+			sepaActive: inputMerchantConfig.sepaActive,
+			default: inputMerchantConfig.defaultConfig
 		});
 		
 		const newMerchantConfig = await merchantConfig.save();
@@ -84,6 +103,11 @@ exports.update = async (req, res) => {
 	} catch (error) {
 		return res.boom.badImplementation();
 	}
+	console.log(inputMerchantConfig.defaultConfig)
+
+	if (inputMerchantConfig.defaultConfig) {
+		await updateAllDefaultConfig();
+	}
 
 	try {
 		merchantConfig.name = inputMerchantConfig.name,
@@ -105,7 +129,9 @@ exports.update = async (req, res) => {
 		merchantConfig.googlePayActive = inputMerchantConfig.googlePayActive,
 		merchantConfig.applePayActive = inputMerchantConfig.applePayActive,
 		merchantConfig.paypalActive = inputMerchantConfig.paypalActive,
-		merchantConfig.almaActive = inputMerchantConfig.almaActive
+		merchantConfig.almaActive = inputMerchantConfig.almaActive,
+		merchantConfig.sepaActive = inputMerchantConfig.sepaActive,
+		merchantConfig.default =  inputMerchantConfig.defaultConfig
 
 		await merchantConfig.save();
 		console.log('merchant config : ' + merchantConfig.name + ', properly updated');
