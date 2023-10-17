@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
 		
 		const newMerchantConfig = await merchantConfig.save();
 		console.log('new merchantConfig is saved : ' + newMerchantConfig.name);
-		return res.send(newMerchantConfig);
+		return res.status(200).send(newMerchantConfig);
 	} catch (error) {
 		return res.boom.badImplementation('unable to create new merchant config');
 	}
@@ -135,7 +135,7 @@ exports.update = async (req, res) => {
 
 		await merchantConfig.save();
 		console.log('merchant config : ' + merchantConfig.name + ', properly updated');
-		return res.send(merchantConfig);
+		return res.status(200).send(merchantConfig);
 	} catch (error) {
 		console.log(error);
 		return res.boom.badImplementation('cannot update merchant config');
