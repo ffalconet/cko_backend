@@ -54,9 +54,14 @@ const routes = [
 		path: '/sepaMandate',
 		authorization: authorizations.sepaMandate,
 		controller: controller.sepaMandate,
+	},
+	{
+		method: 'POST',
+		path: '/payment-sessions',
+		authorization: authorizations.payments,
+		validation: validations.payments,
+		controller: controller.createPaymentSession,
 	}
-
-
 ];
 routesHelper.mountApiRoutes(router, routes.reverse());
 

@@ -332,3 +332,46 @@ exports.validateAppleSession = async (req, res) => {
 	  res.status(500).send(err);
 	}
   };
+
+
+exports.createPaymentSession = async (req, res) => {
+
+	try {
+		console.log('Hello : ', req.body)
+		const config = {
+			headers: { 
+				Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
+				'Content-Type': 'application/json' }
+		};
+
+		const data = {
+			amount: parseInt(req.body.amount),
+			currency: req.body.currency,
+			reference: req.body.reference,
+			billing: {
+			  address: {
+				country: req.body.country
+			  }
+			},
+			customer: {
+			  name: req.body.name,
+			  email: req.body.email
+			},
+			success_url: "https://example.com/payments/success",
+			failure_url: "https://example.com/payments/failure"
+		  };
+		
+		  console.log(data)
+
+		const response = await axios.post('https://api.sandbox.checkout.com/payment-sessions',
+			data,
+		  	config);
+
+		return res.status(200).send(response.data);
+
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
