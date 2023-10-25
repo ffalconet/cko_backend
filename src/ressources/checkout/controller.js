@@ -361,7 +361,10 @@ exports.createPaymentSession = async (req, res) => {
 			failure_url: "https://example.com/payments/failure"
 		  };
 		
-		  console.log(data)
+		  if(req.body.securePayment == 'true') {
+			data = { ...data, "3ds":{ enabled:true }};
+		}
+		console.log(data)
 
 		const response = await axios.post('https://api.sandbox.checkout.com/payment-sessions',
 			data,
