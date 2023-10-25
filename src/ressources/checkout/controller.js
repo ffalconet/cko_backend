@@ -344,7 +344,7 @@ exports.createPaymentSession = async (req, res) => {
 				'Content-Type': 'application/json' }
 		};
 
-		const data = {
+		let data = {
 			amount: parseInt(req.body.amount),
 			currency: req.body.currency,
 			reference: req.body.reference,
