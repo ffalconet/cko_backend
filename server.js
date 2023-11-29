@@ -6,6 +6,8 @@ const cors = require('cors');
 const boom = require('express-boom');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+//TO ADD IN ORDER TO MANAGE WEBHOOK IN RAW MODE
+// var bodyParser = require('body-parser');
 
 mongoose.Promise = global.Promise;
 
@@ -31,6 +33,12 @@ app.options('*', cors());
 
 app.use(boom());
 app.use(cookieParser());
+/*
+TO ADD IN ORDER TO MANAGE WEBHOOK IN RAW MODE
+app.use(bodyParser.json({
+	verify: (req, res, buf) => {
+	req.rawBody = buf}
+}))*/
 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json({ limit: '50mb' }));

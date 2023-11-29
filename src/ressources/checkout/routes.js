@@ -61,7 +61,29 @@ const routes = [
 		authorization: authorizations.payments,
 		validation: validations.payments,
 		controller: controller.createPaymentSession,
-	}
+	},
+	{
+		method: 'POST',
+		path: '/payment-contexts',
+		authorization: authorizations.payments,
+		validation: validations.payments,
+		controller: controller.createPaymentContext,
+	},
+	{
+		method: 'POST',
+		path: '/payment-paypal',
+		authorization: authorizations.payments,
+		//validation: validations.payments,
+		controller: controller.paymentPaypal,
+	},
+	/*,
+	{
+		method: 'POST',
+		path: '/webhook',
+		authorization: authorizations.payments,
+		//validation: validations.payments,
+		controller: controller.webhook,
+	}*/
 ];
 routesHelper.mountApiRoutes(router, routes.reverse());
 
