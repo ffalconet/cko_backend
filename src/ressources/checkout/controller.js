@@ -6,6 +6,7 @@ const fs = require("fs");
 const https = require("https");
 const axios = require("axios");
 const Instrument = require('./model');
+const MerchantConfig = require('../account/model');
 
 exports.payments = async (req, res) => {
 
@@ -26,7 +27,14 @@ exports.payments = async (req, res) => {
 
 	try {
 		console.log(req.body)
-		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+
+		let cko;
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		if (!merchantConfig) {
+			cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+		} else {
+			cko = new Checkout(merchantConfig.secretKey, { pk: merchantConfig.publicKey, timeout: 7000 });
+		}
 
 		if (req.body.store_for_future_use && req.body.store_for_future_use == 'true')
 			store_for_future_use = true;
@@ -150,6 +158,53 @@ exports.getPaymentDetails = async (req, res) => {
 	}
 };
 
+exports.getPaymentDetailsPost = async (req, res) => {
+
+	try {
+		const merchant = req.body.merchant;
+		const ckoSessionId = req.body.ckoSessionId;
+		console.log(ckoSessionId)
+
+		let cko;
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		if (!merchantConfig) {
+			cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+		} else {
+			cko = new Checkout(merchantConfig.secretKey, { pk: merchantConfig.publicKey, timeout: 7000 });
+		}
+
+		const paymentDetails = await cko.payments.get(ckoSessionId);
+		console.log(paymentDetails);
+		if(paymentDetails) {
+			if (paymentDetails.source && paymentDetails.source.id) {
+
+				const result = await Instrument.find({sourceId: paymentDetails.source.id, merchant:merchant});
+				console.log(result)
+				if (result && result.length == 0) {
+					const instrument = new Instrument({
+						merchant: merchant,
+						buyerEmail: paymentDetails.customer.email,
+						scheme: paymentDetails.source.scheme,
+						sourceId: paymentDetails.source.id,
+						bin: paymentDetails.source.bin,
+						last4: paymentDetails.source.last4,
+						expiryMonth: paymentDetails.source.expiry_month,
+						expiryYear: paymentDetails.source.expiry_year,
+					});
+					
+					await instrument.save();
+					console.log('new instrument is saved : ' + instrument.bin + 'xxxxxxx' + instrument.last4 + ', ' + instrument.expiryMonth + '|' + instrument.expiryYear);
+				}
+			}
+			res.status(200).send(paymentDetails);
+		}
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
+
 /*exports.getCustomerDetails = async (req, res) => {
 	console.log(`get Instruments for  ${req.params.id}`);
 	try {
@@ -170,12 +225,13 @@ exports.getPaymentDetails = async (req, res) => {
 
 exports.getCustomerDetails = async (req, res) => {
 
-	console.log(`get Instruments for  ${req.params.id}`);
+	console.log(`get Instruments for  ${req.body.emailAddress}`);
 
-	const buyerEmail = req.params.id;
+	const buyerEmail = req.body.emailAddress;
+	const merchant = req.body.merchant;
 
 	try {
-		const instruments = await Instrument.find({buyerEmail: buyerEmail});
+		const instruments = await Instrument.find({buyerEmail: buyerEmail, merchant: merchant});
 		if (!instruments) return res.boom.notFound();
 		
 		console.log('instruments for   ' + buyerEmail + ' found');
@@ -338,11 +394,23 @@ exports.createPaymentSession = async (req, res) => {
 
 	try {
 		console.log('Hello : ', req.body)
-		const config = {
-			headers: { 
-				Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
-				'Content-Type': 'application/json' }
-		};
+		let config;
+
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		console.log(merchantConfig)
+		if (!merchantConfig) {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
+					'Content-Type': 'application/json' }
+			};
+		} else {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${merchantConfig.secretKey}`,
+					'Content-Type': 'application/json' }
+			};
+		}
 
 		let data = {
 			amount: parseInt(req.body.amount),
@@ -385,11 +453,22 @@ exports.createPaymentContext = async (req, res) => {
 
 	try {
 		console.log('Hello : ', req.body)
-		const config = {
-			headers: { 
-				Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
-				'Content-Type': 'application/json' }
-		};
+		let config;
+
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		if (!merchantConfig) {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
+					'Content-Type': 'application/json' }
+			};
+		} else {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${merchantConfig.secretKey}`,
+					'Content-Type': 'application/json' }
+			};
+		}
 
 		let data = {
 			source: {
@@ -438,7 +517,14 @@ exports.paymentPaypal = async (req, res) => {
 
 	try {
 		console.log('Hello : ', req.body)
-		const cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+
+		let cko;
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		if (!merchantConfig) {
+			cko = new Checkout(constants.CKO_SECRET_KEY, { pk: constants.CKO_PUBLIC_KEY, timeout: 7000 });
+		} else {
+			cko = new Checkout(merchantConfig.secretKey, { pk: merchantConfig.publicKey, timeout: 7000 });
+		}
 
 		let genericPayload = {
 			payment_context_id: req.body.payment_context_id,

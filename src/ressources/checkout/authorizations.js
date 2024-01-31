@@ -15,6 +15,10 @@ exports.getPaymentDetails = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });
 
+exports.getPaymentDetailsPost = aclMiddleware({
+	roles: [ADMIN_ROLE],
+});
+
 exports.getCustomerDetails = aclMiddleware({
 	roles: [ADMIN_ROLE],
 });

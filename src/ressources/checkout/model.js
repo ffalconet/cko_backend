@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const instrumentSchema = mongoose.Schema({
     buyerEmail: String,
+    merchant: String,
     scheme: String,
     sourceId: String,
     bin: String,

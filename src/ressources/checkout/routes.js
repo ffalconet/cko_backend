@@ -26,8 +26,14 @@ const routes = [
 		controller: controller.getPaymentDetails,
 	},
 	{
-		method: 'GET',
-		path: '/customers/:id',
+		method: 'POST',
+		path: '/payments/getPaymentDetails',
+		authorization: authorizations.getPaymentDetailsPost,
+		controller: controller.getPaymentDetailsPost,
+	},
+	{
+		method: 'POST',
+		path: '/customers',
 		authorization: authorizations.getCustomerDetails,
 		controller: controller.getCustomerDetails,
 	},
