@@ -289,9 +289,9 @@ exports.validateAppleSession = async (req, res) => {
 	  response = await axios.post(
 		appleUrl,
 		{
-		  merchantIdentifier: 'merchant.com.herokuapp.demo-cko',
-		  domainName: 'demo-cko-frontend.herokuapp.com',
-		  displayName: "Test",
+		  merchantIdentifier: 'merchant.fr.falconet.applepay',
+		  domainName: 'apple.falconet.fr',
+		  displayName: "Merchand ID Falconet Sandbox",
 		},
 		{
 		  httpsAgent,
