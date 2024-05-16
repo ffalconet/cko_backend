@@ -342,8 +342,8 @@ exports.validateAppleSession = async (req, res) => {
 	  });
   
 	  console.log("Apple Pay payment outcome", payment);
-	  await axios.post('https://webhook.site/d28cc1d9-8ffe-49a1-9fb8-15e242e8c6d8',
-			payment);
+	  /* await axios.post('https://webhook.site/d28cc1d9-8ffe-49a1-9fb8-15e242e8c6d8',
+			payment); */
 	
 	  res.send(payment);
 	} catch (err) {
