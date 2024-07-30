@@ -546,7 +546,6 @@ exports.paymentPaypal = async (req, res) => {
 	}
 };
 
-/*
 exports.webhook = async (req, res) => {
 
 	try {
@@ -562,7 +561,6 @@ exports.webhook = async (req, res) => {
 			// file written successfully
 		});*/
 
-		/*
 		var crypto = require('crypto');
 
 		const hmac = crypto.createHmac('sha256', '682bd2c2-6d2e-48f2-8ea8-f5f28623bcbb');
@@ -577,4 +575,4 @@ exports.webhook = async (req, res) => {
 		console.log(error);
 		return res.status(500).send(error);
 	}
-};*/
+};
