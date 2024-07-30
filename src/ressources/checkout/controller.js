@@ -549,10 +549,10 @@ exports.paymentPaypal = async (req, res) => {
 exports.webhook = async (req, res) => {
 
 	try {
-		console.log('REQ BODY : ', req.body);
+		/*console.log('REQ BODY : ', req.body);
 		console.log('REQ RAW : ', req.rawBody);
 		console.log(req.rawBody);
-		console.log('HEADER RECEIVED : ', req.headers)
+		console.log('HEADER RECEIVED : ', req.headers)*/
 		/*
 		fs.writeFile('test.txt', req.rawBody.toString('hex'), err => {
 			if (err) {
@@ -561,7 +561,7 @@ exports.webhook = async (req, res) => {
 			// file written successfully
 		});*/
 
-		var crypto = require('crypto');
+		/*var crypto = require('crypto');
 
 		const hmac = crypto.createHmac('sha256', '682bd2c2-6d2e-48f2-8ea8-f5f28623bcbb');
   		hmac.update(req.rawBody);
@@ -569,7 +569,23 @@ exports.webhook = async (req, res) => {
 
 		console.log("HMAC CALCULATED : ", signature);
 
-		return res.status(200).send(signature);
+		return res.status(200).send(signature);*/
+console.log(req)
+
+		 let config = {
+				headers: { 
+					'Content-Type': 'application/json' }
+			};
+		
+		try {
+	  response = await axios.post(
+		https://webhook.site/66d11f38-bd47-4b32-b68c-941cbe278f1f,
+		req,
+		{
+		  config,
+		}
+	  );
+	  res.send(response.data);
 
 	} catch (error) {
 		console.log(error);
