@@ -424,6 +424,11 @@ exports.createPaymentSession = async (req, res) => {
 				country: req.body.country
 			  }
 			},
+			items: [{
+				name:"example",
+				quantity:1,
+				unit_price:2500
+			}],
 			customer: {
 			  name: req.body.name,
 			  email: req.body.email
