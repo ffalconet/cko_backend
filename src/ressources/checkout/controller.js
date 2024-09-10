@@ -546,7 +546,7 @@ exports.paymentPaypal = async (req, res) => {
 	}
 };
 
-exports.webhook = async (req, res) => {
+/*exports.webhook = async (req, res) => {
 
 	try {
 		/*console.log('REQ BODY : ', req.body);
@@ -570,7 +570,7 @@ exports.webhook = async (req, res) => {
 		console.log("HMAC CALCULATED : ", signature);
 
 		return res.status(200).send(signature);*/
-console.log(req)
+/*console.log(req)
 
 		 let config = {
 				headers: { 
@@ -591,4 +591,4 @@ console.log(req)
 		console.log(error);
 		return res.status(500).send(error);
 	}
-};
+};*/
