@@ -81,14 +81,14 @@ const routes = [
 		authorization: authorizations.payments,
 		//validation: validations.payments,
 		controller: controller.paymentPaypal,
-	},
+	}/*,
 	{
 		method: 'POST',
 		path: '/webhook',
 		authorization: authorizations.payments,
 		//validation: validations.payments,
 		controller: controller.webhook,
-	}
+	}*/
 ];
 routesHelper.mountApiRoutes(router, routes.reverse());
 
