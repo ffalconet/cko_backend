@@ -8,6 +8,25 @@ const axios = require("axios");
 const Instrument = require('./model');
 const MerchantConfig = require('../account/model');
 
+
+const { SignJWT } = require("jose/jwt/sign");
+const { createPrivateKey } = require("crypto");
+
+const alg = "ES256";
+const kid = "d1api-ouitrust-01";
+const typ = "JWT"
+const scope = "thales:d1";
+const iss = "is_cko_oui";
+const aud = "https://client-api.d1.thalescloud.io/oidc/is_cko_oui";
+const expirationTime = "7d";
+const sub = "crh_3cappku57unubc6cs232wfyute";
+
+const privateKeyPem = `-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIBkBk6laeiTy2SLprCAGslASr3cSurjzxeT3RV3lf6VYoAoGCCqGSM49
+AwEHoUQDQgAEG3JV6LyWK+VwYjIBSmDCVSntS8BAabNhsx9mo3R1fikdenrpj8W1
+UYpkWbJOQtun/oP0hkF5xG/OMoBoQKGUvA==
+-----END EC PRIVATE KEY-----`;
+
 exports.payments = async (req, res) => {
 
 	let payment;
@@ -550,6 +569,112 @@ exports.paymentPaypal = async (req, res) => {
 		return res.status(500).send(error);
 	}
 };
+
+
+exports.createKlarnaPaymentContext = async (req, res) => {
+
+	try {
+		console.log('Hello Klarna : ', req.body)
+		let config;
+
+		const merchantConfig = await MerchantConfig.findOne({name: req?.body?.merchant});
+		if (!merchantConfig) {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${constants.CKO_SECRET_KEY}`,
+					'Content-Type': 'application/json' }
+			};
+		} else {
+			config = {
+				headers: { 
+					Authorization: `Bearer ${merchantConfig.secretKey}`,
+					'Content-Type': 'application/json' }
+			};
+		}
+
+		let data = {
+			source: {
+				type: 'klarna',
+				account_holder: {
+					billing_address: {
+        				country: "DE"
+      				},
+    			},
+			},
+			amount: parseInt(req.body.amount),
+			currency: req.body.currency,
+			payment_type: 'regular',
+			reference: req.body.reference,
+			capture: true,
+			items: [{
+				name: "laptop",
+				unit_price: 2500,
+				total_amount: 2500,
+				quantity : 1,
+				reference: "BA67A"
+			}],
+			billing: {
+			  address: {
+				country: req.body.country
+			  }
+			},
+			processing: {
+    			locale: "en-GB"
+  			},
+			customer: {
+			  name: req.body.name,
+			  email: req.body.email
+			},
+			success_url: req.body.success_url,
+			failure_url: req.body.failure_url,
+		  };
+		
+		console.log(data)
+
+		const response = await axios.post('https://api.sandbox.checkout.com/payment-contexts',
+			data,
+		  	config);
+
+		return res.status(200).send(response.data);
+
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
+
+exports.jwttoken = async (req, res) => {
+
+	try {
+		
+		const privateKey = createPrivateKey(privateKeyPem);
+
+    let oldDateObj = new Date();
+    let newDateObj = new Date();
+    newDateObj.setTime(oldDateObj.getTime() + (30 * 60 * 1000));
+
+    console.log(newDateObj)
+
+  const token = 
+    await new SignJWT({ scope })
+      .setProtectedHeader({ alg, kid, typ })
+      .setIssuedAt()
+      .setIssuer(iss)
+      .setAudience(aud)
+      .setExpirationTime(expirationTime)
+      .setSubject(sub)
+      .sign(privateKey);
+
+	  return res.status(200).send(token);
+
+
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
+
 
 /*exports.webhook = async (req, res) => {
 
