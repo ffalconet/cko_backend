@@ -77,11 +77,26 @@ const routes = [
 	},
 	{
 		method: 'POST',
+		path: '/klarna-payment-contexts',
+		authorization: authorizations.payments,
+		validation: validations.payments,
+		controller: controller.createKlarnaPaymentContext,
+	},
+	{
+		method: 'POST',
 		path: '/payment-paypal',
 		authorization: authorizations.payments,
 		//validation: validations.payments,
 		controller: controller.paymentPaypal,
-	}/*,
+	},
+	{
+		method: 'GET',
+		path: '/jwttoken',
+		authorization: authorizations.payments,
+		//validation: validations.payments,
+		controller: controller.jwttoken,
+	}
+	/*,
 	{
 		method: 'POST',
 		path: '/webhook',
