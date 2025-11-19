@@ -676,13 +676,16 @@ exports.jwttoken = async (req, res) => {
 };
 
 
-/*exports.webhook = async (req, res) => {
+exports.webhook = async (req, res) => {
 
 	try {
-		/*console.log('REQ BODY : ', req.body);
+		console.log('REQ BODY : ', req.body);
 		console.log('REQ RAW : ', req.rawBody);
 		console.log(req.rawBody);
-		console.log('HEADER RECEIVED : ', req.headers)*/
+		console.log('HEADER RECEIVED : ', req.headers)
+
+		return res.status(200).send(signature);
+		
 		/*
 		fs.writeFile('test.txt', req.rawBody.toString('hex'), err => {
 			if (err) {
@@ -715,10 +718,10 @@ exports.jwttoken = async (req, res) => {
 		  config,
 		}
 	  );
-	  res.send(response.data);
+	  res.send(response.data); */
 
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send(error);
 	}
-};*/
+}
