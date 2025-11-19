@@ -684,7 +684,7 @@ exports.webhook = async (req, res) => {
 		console.log(req.rawBody);
 		console.log('HEADER RECEIVED : ', req.headers)
 
-		return res.status(200).send(signature);
+		return res.status(200).send("TESTSETESTSET");
 		
 		/*
 		fs.writeFile('test.txt', req.rawBody.toString('hex'), err => {
@@ -724,4 +724,4 @@ exports.webhook = async (req, res) => {
 		console.log(error);
 		return res.status(500).send(error);
 	}
-}
+};
