@@ -684,7 +684,7 @@ exports.webhook = async (req, res) => {
 		console.log(req.rawBody);
 		console.log('HEADER RECEIVED : ', req.headers)
 
-		return res.status(503).json({"test":"TESTSETESTSET"});
+		return res.status(200).json({"test":"TESTSETESTSET"});
 		
 		/*
 		fs.writeFile('test.txt', req.rawBody.toString('hex'), err => {
